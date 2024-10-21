@@ -1,0 +1,48 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name laravel.localhost;
+    root /app/public;
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    index index.php;
+
+    charset utf-8;
+
+    # Правила обработки запросов
+    location / {
+         if ($request_method = OPTIONS) {
+            add_header 'Access-Control-Allow-Origin' $http_origin;
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PATCH, PUT, DELETE, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, X-Requested-With, X-Auth-Token, Origin, x-csrf-token';
+            add_header 'Access-Control-Allow-Credentials' 'true';
+            return 204;
+         }
+
+         # Обработка основных запросов
+         try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass php:9000;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~* \.(jpg|gif|png|eot|ttf|woff|woff2|otf)$ {
+        add_header 'Access-Control-Allow-Origin' *;
+        add_header 'Access-Control-Allow-Methods' 'GET, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Authorization, Content-Type, X-Requested-With, X-Auth-Token, Origin, x-csrf-token';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        expires max;
+    }
+
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}

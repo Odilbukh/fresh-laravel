@@ -1,0 +1,79 @@
+services:
+  nginx:
+    container_name: "laravel-nginx"
+    image: nginx:latest
+    volumes:
+      - ./docker/nginx/templates/:/etc/nginx/templates
+      - "./:/app"
+    ports:
+      - "8500:80"
+    depends_on:
+      - php
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  mysql:
+    container_name: "laravel-mysql"
+    image: mysql:8.3
+    command: --max_allowed_packet=1073741824
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: laravel
+    ports:
+      - "8506:3306"
+
+  php:
+    container_name: "laravel-php"
+    image: oooiik/php:8.2-fpm-laravel
+    environment:
+      USER: 1000
+      PHP_IDE_CONFIG: "serverName=Docker"
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - "./:/app"
+    depends_on:
+      - mysql
+      - redis
+    working_dir: /app
+    stdin_open: true
+    tty: true
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+
+  redis:
+    container_name: "laravel-redis"
+    image: redis:alpine
+    volumes:
+      - redis:/data
+    ports:
+      - "8579:6379"
+
+
+  node:
+    container_name: "laravel-node"
+    image: node:20.18.0-alpine3.20
+    user: 1000:1000
+    working_dir: /app
+    volumes:
+      - "./:/app"
+    tty: true
+
+
+volumes:
+  mysql:
+    driver: local
+  redis:
+    driver: local
+
+
+networks:
+  default:
+    name: "laravel_default"
+    driver: bridge
