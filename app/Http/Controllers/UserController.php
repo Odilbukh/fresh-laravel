@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::paginate($request->perPage);
+        $users = User::withCount('tasks')->paginate($request->perPage);
 
         return response()->json($users, 200);
     }
