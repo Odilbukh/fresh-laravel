@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,27 +16,12 @@ class UserController extends Controller
         return response()->json($users, 200);
     }
 
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'middle_name' =>'string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:4|max:8',
-            'birthday' => 'date|date_format:Y-m-d|nullable',
-            'avatar' => 'nullable',
-            'phone' => 'nullable|max:15'
-        ]);
+        $valideted = $request->validated();
+        $valideted['password'] = Hash::make($valideted['password']);
 
-        $user = User::create([
-            'name' => $request->name,
-            'middle_name' => $request->middle_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'birthday' => $request->birthday,
-            'avatar' => $request->avatar,
-            'phone' => $request->phone
-        ]);
+        $user = User::create($valideted);
 
         if (!$user) {
             return response()->json(['message' => 'User cannot be created'], 500);
