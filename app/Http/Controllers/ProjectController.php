@@ -13,14 +13,12 @@ class ProjectController extends Controller
         return response()->json($projects, 200);
     }
 
-    public function store(ProjectCreateRequest $request){
-        $request->validate([
-            'name' => 'required|string|max:30'
-        ]);
+    public function store(ProjectCreateRequest $request)
+    {
+        $validated = $request->validated();
+        $project = Project::create($validated);
 
-        $project = Project::create([
-            'name' => $request->name
-        ]);
+        $project->users()->sync([1, 3]);
 
         if (!$project){
             return response()->json(['message' => 'Project cannot be created']);
@@ -29,6 +27,7 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Project created successfully']);
 
     }
+
     public function show($id){
         return response()->json(Project::findorFail($id));
     }
@@ -40,6 +39,8 @@ class ProjectController extends Controller
         $project->update([
             'name' => $request->name
         ]);
+
+        $project->users()->sync($request);
 
         return response()->json([
             'message' => 'Project updated successfully',
