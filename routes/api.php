@@ -1,6 +1,14 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('auth', [AuthController::class, 'auth']);
+});
+
 
 Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
 Route::post('users', [\App\Http\Controllers\UserController::class, 'store']);
