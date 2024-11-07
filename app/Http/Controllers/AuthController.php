@@ -25,7 +25,6 @@ class AuthController extends Controller
             ]);
         }
 
-        $key = env('TEST_KEY');
 
         return $user->createToken('app_token')->plainTextToken;
     }
@@ -33,5 +32,14 @@ class AuthController extends Controller
     public function auth()
     {
         return Auth::user();
+    }
+    public function logout(Request $request){
+        $user = $request->user();
+        if($user) {
+            return $user->tokens()->delete();
+        }
+        else {
+            return response()->json(['message'=>'You are not authorised'], 401);
+        }
     }
 }

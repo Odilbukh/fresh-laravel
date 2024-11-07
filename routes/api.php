@@ -7,7 +7,9 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth', [AuthController::class, 'auth']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });
+
 
 
 Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);

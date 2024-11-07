@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,19 +39,12 @@ class UserController extends Controller
         return response()->json(User::findOrFail($id));
     }
 
-    public function update($id, Request $request)
+    public function update($id, UpdateUserRequest $request)
     {
         $user = User::findOrFail($id);
-
-        $user->update([
-            'name' => $request->name,
-            'middle_name' => $request->middle_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'birthday' => $request->birthday,
-            'avatar' => $request->avatar,
-            'phone' => $request->phone
-        ]);
+        $validated = $request->validated();
+        $validated['password'] = Hash::make($validated['password']);
+        $user->update($validated);
 
         return response()->json([
             'message' => 'User updated successfully',
