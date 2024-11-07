@@ -21,7 +21,6 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
-        dd (\Auth::user());
         return [
             'name' => 'required|string|max:255',
             'middle_name' =>'string|max:255',
