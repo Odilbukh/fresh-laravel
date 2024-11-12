@@ -20,7 +20,7 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request){
         $validated = $request->validated();
         $role = Role::create($validated);
-        $role->users()->attach($request->user());
+        $role->users()->attach($request->user_ids);
         if(!$role){
             return response()->json(['message' => 'Role not created'], 500);
         }
@@ -62,7 +62,7 @@ class RoleController extends Controller
             'name' => $request->name
         ]);
 
-        $role->users()->sync($request);
+        $role->users()->sync($request->user_ids);
 
         return response()->json([
             'message' => 'Role updated successfully',
