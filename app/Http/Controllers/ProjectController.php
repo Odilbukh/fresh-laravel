@@ -40,7 +40,7 @@ class ProjectController extends Controller
             'name' => $request->name
         ]);
 
-        $project->users()->sync($request);
+        $project->users()->sync($request->user_ids);
 
         return response()->json([
             'message' => 'Project updated successfully',

@@ -8,6 +8,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth', [AuthController::class, 'auth']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
 
     Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
     Route::post('users', [\App\Http\Controllers\UserController::class, 'store']);
@@ -23,4 +24,3 @@ Route::put('tasks/{id}', [\App\Http\Controllers\TaskController::class, 'update']
 Route::delete('tasks/{id}', [\App\Http\Controllers\TaskController::class, 'destroy']);
 
 Route::apiResource('projects', \App\Http\Controllers\ProjectController::class);
-Route::resource('roles', \App\Http\Controllers\RoleController::class);
