@@ -5,15 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
+use GuzzleHttp\Psr7\Request;
 
 class RoleController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $roles = Role::paginate($request->input('perPage', 20));
+        return response()->json($roles,200);
+    }
+    public function store(StoreRoleRequest $request){
+        $validated = $request->validated();
+        $role = Role::create($validated);
+        $role->users()->attach($request->user());
+        if(!$role){
+            return response()->json(['message' => 'Role not created'], 500);
+        }
+        return response()->json(['message' => 'Role created'], 200);
     }
 
     /**
@@ -24,20 +35,13 @@ class RoleController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRoleRequest $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show($id)
     {
-        //
+        return response()->json(Role::findorFail($id));
     }
 
     /**
@@ -51,16 +55,31 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update($id, Request $request)
     {
-        //
+        $role = Role::findorFail($id);
+        $role->update([
+            'name' => $request->name
+        ]);
+
+        $role->users()->sync($request);
+
+        return response()->json([
+            'message' => 'Role updated successfully',
+            $role
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Role $role)
+    public function destroy($id)
     {
-        //
+        $project = Role::findOrFail($id);
+        $project->delete();
+
+        return response()->json([
+            'message' => 'Role was deleted successfully'
+        ]);
     }
 }
