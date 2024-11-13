@@ -65,8 +65,8 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        $project = Role::findOrFail($id);
-        $project->delete();
+        $role = Role::findOrFail($id);
+        $role->delete();
 
         return response()->json([
             'message' => 'Role was deleted successfully'

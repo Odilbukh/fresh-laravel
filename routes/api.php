@@ -24,3 +24,5 @@ Route::put('tasks/{id}', [\App\Http\Controllers\TaskController::class, 'update']
 Route::delete('tasks/{id}', [\App\Http\Controllers\TaskController::class, 'destroy']);
 
 Route::apiResource('projects', \App\Http\Controllers\ProjectController::class);
+Route::apiResource('products', \App\Http\Controllers\ProjectController::class);
+
