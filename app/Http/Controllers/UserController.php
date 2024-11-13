@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
+use App\Jobs\AttachUserProjectJob;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,8 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User cannot be created'], 500);
         }
+
+        AttachUserProjectJob::dispatch($user->id)->onQueue('my_queue');
 
         return response()->json([
             'message' => 'User created successfully',
