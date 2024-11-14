@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserCreated;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserCreateRequest;
 use App\Jobs\AttachUserProjectJob;
@@ -30,6 +31,7 @@ class UserController extends Controller
         }
 
         AttachUserProjectJob::dispatch($user->id)->onQueue('my_queue');
+        event(new UserCreated($user));
 
         return response()->json([
             'message' => 'User created successfully',
