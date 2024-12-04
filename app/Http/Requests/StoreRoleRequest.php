@@ -23,7 +23,7 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'user_ids'=> 'required|array',
+            'user_ids'=> 'array',
             'user_ids.*' => 'integer|exists:users,id',
         ];
     }

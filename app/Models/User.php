@@ -70,7 +70,7 @@ class User extends Authenticatable
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'project_user');
+        return $this->belongsToMany(Role::class, 'role_user');
     }
 
     public function products(): BelongsToMany

@@ -8,14 +8,17 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth', [AuthController::class, 'auth']);
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
+    Route::middleware('isAdmin')->group(function () {
+        Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
+        Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
+        Route::post('users', [\App\Http\Controllers\UserController::class, 'store']);
+        Route::get('users/{id}', [\App\Http\Controllers\UserController::class, 'show']);
+        Route::put('users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
+        Route::delete('users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
 
-    Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
-    Route::post('users', [\App\Http\Controllers\UserController::class, 'store']);
-    Route::get('users/{id}', [\App\Http\Controllers\UserController::class, 'show']);
-    Route::put('users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
-    Route::delete('users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
-});
+    });
+    });
+
 
 Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'index']);
 Route::post('tasks', [\App\Http\Controllers\TaskController::class, 'store']);
