@@ -20,7 +20,7 @@ class ProjectController extends Controller
 
         $project->users()->sync([1, 3]);
 
-        if (!$project){
+        if (!$project) {
             return response()->json(['message' => 'Project cannot be created']);
         }
 
