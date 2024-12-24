@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\HotelFilter;
 use App\Http\Requests\HotelCreateRequest;
 use App\Models\Hotel;
-use App\Models\Project;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, HotelFilter $hotelFilter)
     {
-        $hotels = Hotel::paginate($request->input('perPage', 20));
+        $hotels = Hotel::filter($hotelFilter)->paginate($request->input('perPage', 20));
         return response()->json($hotels, 200);
     }
 
@@ -24,7 +24,7 @@ class HotelController extends Controller
     {
         $validated = $request->validated();
         $hotel = Hotel::create($validated);
-        if (isset($valideted['user_ids'])) {
+        if (isset($validated['user_ids'])) {
             $hotel->users()->sync($validated['user_ids']);
         }
         if (isset($validated['room_ids'])) {

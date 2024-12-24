@@ -14,4 +14,11 @@ class Room extends Model
         'price_per_night',
         'description'
     ];
+    public function hotel(){
+        return $this->belongsTo(Hotel::class);
+    }
+    public function services(){
+        return $this->belongsToMany(Service::class, 'room_service');
+    }
+
 }

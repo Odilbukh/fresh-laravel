@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +14,8 @@ class Hotel extends Model
         'name',
         'address',
         'description',
-        'contact_info'
+        'contact_info',
+        'city',
     ];
     public function users(): BelongsToMany
     {
@@ -20,5 +23,9 @@ class Hotel extends Model
     }
     public function rooms(): HasMany{
         return $this->hasMany(Room::class);
+    }
+    public function scopeFilter(Builder $builder, QueryFilter $filter)
+    {
+        $filter->apply($builder);
     }
 }
