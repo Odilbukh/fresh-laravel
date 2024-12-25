@@ -87,8 +87,12 @@ class User extends Authenticatable
      * @param Builder $builder
      * @param QueryFilter $filter
      */
-    public function scopeFilter(Builder $builder, QueryFilter $filter)
+    public function scopeFilter (Builder $builder, QueryFilter $filter)
     {
         $filter->apply($builder);
+    }
+
+    public function bookings(): HasMany {
+        return $this->hasMany(Booking::class);
     }
 }

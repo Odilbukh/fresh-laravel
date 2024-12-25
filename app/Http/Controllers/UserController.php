@@ -55,6 +55,7 @@ class UserController extends Controller
         AttachUserProjectJob::dispatch($user->id)->onQueue('my_queue');
         event(new UserCreated($user));
 
+        $user->roles()->sync([$valideted['role_id']]);
         return response()->json([
             'message' => 'User created successfully',
             $user

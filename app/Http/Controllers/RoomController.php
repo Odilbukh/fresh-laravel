@@ -7,6 +7,7 @@ use App\Http\Requests\RoomUpdateRequest;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
@@ -21,6 +22,7 @@ class RoomController extends Controller
      */
     public function store(RoomCreateRequest $request)
     {
+        Gate::authorize('create', Room::class);
         $validated = $request->validated();
         $user_id = Auth::user()->id;
         $validated['user_id'] = $user_id;
@@ -28,6 +30,7 @@ class RoomController extends Controller
         if(!$room){
             return response()->json(['error' => 'Room cannot be created'], 500);
         }
+        if($user_id)
         return response()->json('Room created successfully', 200);
     }
 

@@ -28,7 +28,8 @@ class UserCreateRequest extends FormRequest
             'password' => 'required|min:4|max:8',
             'birthday' => 'date|date_format:Y-m-d|nullable',
             'avatar' => 'nullable',
-            'phone' => 'nullable|max:15'
+            'phone' => 'nullable|max:15',
+            'role_id' => 'required|integer|exists:roles,id'
         ];
     }
 }

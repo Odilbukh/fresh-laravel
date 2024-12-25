@@ -22,7 +22,10 @@ class BookingCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id' => 'integer|exists:users,id',
             'hotel_id' => 'required|integer|exists:hotels,id',
+            'rooms' => 'required|array',
+            'rooms.*' => 'integer|exists:rooms,id',
             'guests' => 'required|integer|between:1,100',
             'check_in_date' => 'required|date',
             'check_out_date' => 'required|date'

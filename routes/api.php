@@ -11,7 +11,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('auth', [AuthController::class, 'auth']);
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::apiResource('bookings', BookingController::class)->except(['store']);
+    Route::apiResource('bookings', BookingController::class);
     Route::apiResource('rooms', RoomController::class);
     Route::apiResource('services', \App\Http\Controllers\ServiceController::class);
     Route::apiResource('invoices', \App\Http\Controllers\InvoiceController::class);
@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('hotels', \App\Http\Controllers\HotelController::class);
 
 });
-Route::post('bookings', [\App\Http\Controllers\BookingController::class, 'store']);
+//Route::post('bookings', [\App\Http\Controllers\BookingController::class, 'store']);
 Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'index']);
 Route::post('tasks', [\App\Http\Controllers\TaskController::class, 'store']);
 Route::get('tasks/{id}', [\App\Http\Controllers\TaskController::class, 'show']);
