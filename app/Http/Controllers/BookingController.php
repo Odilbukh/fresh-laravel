@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BookingCreateRequest;
 use App\Http\Requests\BookingUpdateRequest;
 use App\Models\Booking;
+use App\Models\Hotel;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,9 +32,9 @@ class BookingController extends Controller
             $user_id = Auth::user()->id;
             $validated['user_id'] = $user_id;
         }
-
-        $room = Room::whereIn('id', $validated['rooms'])->get();
-        $price_per_night = $room->sum('price_per_night');
+        $hotel = Hotel::find($validated['hotel_id']);
+        $rooms = $hotel->rooms()->whereIn('id', $validated['rooms'])->get();
+        $price_per_night = $rooms->sum('price_per_night');
         $days = Carbon::parse($validated['check_in_date'])->diffInDays($validated['check_out_date']);
         $total = $price_per_night * $days;
         $validated['total_amount'] = $total;
@@ -45,6 +46,8 @@ class BookingController extends Controller
         if (!$booking) {
             return response()->json(['error' => 'Booking cannot be created'], 500);
         }
+
+        $booking->rooms()->attach($rooms->pluck('id')->toArray());
 
         return response()->json('Booking is successfull', 200);
     }

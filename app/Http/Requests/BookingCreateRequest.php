@@ -27,8 +27,8 @@ class BookingCreateRequest extends FormRequest
             'rooms' => 'required|array',
             'rooms.*' => 'integer|exists:rooms,id',
             'guests' => 'required|integer|between:1,100',
-            'check_in_date' => 'required|date',
-            'check_out_date' => 'required|date'
+            'check_in_date' => 'required|date|after:'.now()->subDay()->format('Y-m-d'),
+            'check_out_date' => 'required|date|after:check_in_date',
         ];
     }
 }
