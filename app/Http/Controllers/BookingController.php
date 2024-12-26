@@ -18,41 +18,55 @@ class BookingController extends Controller
         return response()->json($hotels, 200);
     }
 
-    public function show($id){
+    public function show($id)
+    {
         return response()->json(Booking::findorfail($id), 200);
     }
 
-    public function store(BookingCreateRequest $request){
+    public function store(BookingCreateRequest $request)
+    {
         $validated = $request->validated();
-        if(!isset($validated['user_id'])) {
+
+        if (!isset($validated['user_id'])) {
             $user_id = Auth::user()->id;
             $validated['user_id'] = $user_id;
         }
+
         $room = Room::whereIn('id', $validated['rooms'])->get();
         $price_per_night = $room->sum('price_per_night');
         $days = Carbon::parse($validated['check_in_date'])->diffInDays($validated['check_out_date']);
         $total = $price_per_night * $days;
         $validated['total_amount'] = $total;
         unset($validated['rooms']);
-        $validated['status']="ok";
+        $validated['status'] = Booking::STATUS_CONFIRMED;
+
         $booking = Booking::create($validated);
-        if(!$booking){
+
+        if (!$booking) {
             return response()->json(['error' => 'Booking cannot be created'], 500);
         }
+
         return response()->json('Booking is successfull', 200);
     }
-    public function update(BookingUpdateRequest $request, $id){
 
+    public function update(BookingUpdateRequest $request, $id)
+    {
         $validated = $request->validated();
+
         $booking = Booking::update($validated);
-        if(!$booking){
+
+        if (!$booking) {
             return response()->json(['error' => 'Booking cannot be updated'], 500);
         }
-        return response()->json(['message'=>'Booking is successfull','booking'=>$booking], 200);
-}
-    public function destroy($id){
-       $booking = Booking::findOrFail($id);
-       $booking->delete();
+
+        return response()->json(['message' => 'Booking is successfull', 'booking' => $booking], 200);
+    }
+
+    public function destroy($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->delete();
+
         return response()->json([
             'message' => 'Booking was deleted successfully'
         ]);

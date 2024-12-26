@@ -27,7 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
     Route::apiResource('hotels', \App\Http\Controllers\HotelController::class);
-
 });
 //Route::post('bookings', [\App\Http\Controllers\BookingController::class, 'store']);
 Route::get('tasks', [\App\Http\Controllers\TaskController::class, 'index']);
