@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Task;
-use App\Models\User;
+use App\Models\Room;
+use App\Models\Hotel;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +15,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         User::factory(10)->create();
-         Task::factory(10)->create();
+
+         $this->call(RandomHotelSeeder::class);
+         $this->call(RandomRoomSeeder::class);
+         $this->call(UserSeeder::class);
     }
 }

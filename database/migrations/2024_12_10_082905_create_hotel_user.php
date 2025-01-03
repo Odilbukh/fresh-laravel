@@ -23,6 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropForeign(['hotel_id', 'user_id']);
         Schema::dropIfExists('hotel_user');
     }
 };
