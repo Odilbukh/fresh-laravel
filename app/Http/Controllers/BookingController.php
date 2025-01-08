@@ -32,30 +32,37 @@ class BookingController extends Controller
             $user_id = Auth::user()->id;
             $validated['user_id'] = $user_id;
         }
+
         $hotel = Hotel::find($validated['hotel_id']);
         $rooms = $hotel->rooms()->whereIn('id', $validated['rooms'])->get();
-        if($rooms->isEmpty()){
+
+        if ($rooms->isEmpty()) {
             return response()->json(['The room does not exists'], 404);
         }
+
         $price_per_night = $rooms->sum('price_per_night');
         $days = Carbon::parse($validated['check_in_date'])->diffInDays($validated['check_out_date']);
         $total = $price_per_night * $days;
         $validated['total_amount'] = $total;
         unset($validated['rooms']);
         $validated['status'] = Booking::STATUS_CONFIRMED;
+
         $bookings = Booking::where('hotel_id', $validated['hotel_id'])
             ->where(function ($query) use ($validated) {
                 $query->whereBetween('check_in_date', [$validated['check_in_date'], $validated['check_out_date']])
-                    ->orWhereBetween('check_out_date', [$validated['check_in_date'], $validated['check_out_date']]);})
+                    ->orWhereBetween('check_out_date', [$validated['check_in_date'], $validated['check_out_date']]);
+            })
             ->get();
-        if($bookings->isNotEmpty()) {
+
+        if ($bookings->isNotEmpty()) {
             foreach ($bookings as $booking) {
                 $exist = $booking->rooms()->whereIn('room_id', $rooms->pluck('id')->toArray())->exists();
-                if($exist) {
+                if ($exist) {
                     return response()->json("This room is occupied on that dates.", 404);
                 }
             }
         }
+
         $booking = Booking::create($validated);
 
         if (!$booking) {

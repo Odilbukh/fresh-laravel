@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
     use HasFactory;
-    protected $fillable =[
+    use SoftDeletes;
+
+    protected $fillable = [
         'name',
         'hotel_id',
         'type',
@@ -16,9 +19,11 @@ class Room extends Model
         'price_per_night',
         'description'
     ];
+
     public function hotel(){
         return $this->belongsTo(Hotel::class);
     }
+
     public function services(){
         return $this->belongsToMany(Service::class, 'room_service');
     }

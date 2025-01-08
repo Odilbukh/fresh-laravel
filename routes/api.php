@@ -17,7 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('invoices', \App\Http\Controllers\InvoiceController::class);
     Route::apiResource('notifications', \App\Http\Controllers\NotificationController::class);
     Route::middleware('isAdmin')->group(function () {
-        Route::apiResource('rooms', RoomController::class);
+//        Route::apiResource('rooms', RoomController::class);
         Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
         Route::get('users', [\App\Http\Controllers\UserController::class, 'index']);
         Route::post('users', [\App\Http\Controllers\UserController::class, 'store']);

@@ -23,9 +23,11 @@ class Hotel extends Model
     {
         return $this->belongsToMany(User::class, 'hotel_user');
     }
+
     public function rooms(): HasMany{
         return $this->hasMany(Room::class);
     }
+
     public function scopeFilter(Builder $builder, QueryFilter $filter)
     {
         $filter->apply($builder);
