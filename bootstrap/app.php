@@ -18,8 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->withSchedule(function (Schedule $schedule) {
-        $schedule->command('isAdmin');
-        $schedule->command('app:create-invoice')->monthlyOn(1, '04:00')->timezone('Asia/Tashkent');
+    })->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        $schedule->command('app:create-invoice')->everyMinute()->timezone('Asia/Tashkent');
     })
     ->create();
