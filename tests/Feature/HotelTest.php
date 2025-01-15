@@ -138,18 +138,21 @@ class HotelTest extends TestCase
         $this->assertDatabaseHas('hotels', $data);
     }
 
-//    public function testCreateHotelWithFail()
-//    {
-//        $data = [
-//            'city' => 'Bostan',
-//            'address' => 'Test Address',
-//            'description' => 'This is a test hotel',
-//        ];
-//
-//        $response = $this->withHeaders([
-//            'Authorization' => 'Bearer ' . $this->token,
-//        ])->post('/api/hotels', $data);
-//
-//        $response->assertJson(["message" => "The name field is required."]);
-//    }
+    public function testCreateHotelWithFail()
+    {
+        $data = [
+            'city' => 'Bostan',
+            'address' => 'Test Address',
+            'description' => 'This is a test hotel',
+        ];
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->token,
+            'Accept' => 'application/json',
+        ])->post('/api/hotels', $data);
+
+        $response->assertStatus(422);
+        $response->assertJson(["message" => "The name field is required."]);
+        $response->assertJsonValidationErrors(['name']);
+    }
 }
