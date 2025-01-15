@@ -24,12 +24,15 @@ class HotelController extends Controller
     {
         $validated = $request->validated();
         $hotel = Hotel::create($validated);
+
         if (isset($validated['user_ids'])) {
             $hotel->users()->sync($validated['user_ids']);
         }
+
         if (isset($validated['room_ids'])) {
             $hotel->rooms()->sync($validated['room_ids']);
         }
+
         if (!$hotel) {
             return response()->json(['message' => 'Hotel cannot be created']);
         }

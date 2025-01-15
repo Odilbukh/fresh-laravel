@@ -26,6 +26,7 @@ class HotelCreateRequest extends FormRequest
             'address' => 'string|max:255',
             'description' => 'string',
             'contact_info' => 'string|max:255',
+            'city' => 'string|max:255',
             'user_ids' => 'array',
             'user_ids.*' => 'integer|exists:users,id',
             'room_ids' => 'array',
