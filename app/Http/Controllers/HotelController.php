@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Filters\HotelFilter;
 use App\Http\Requests\HotelCreateRequest;
+use App\Http\Resources\HotelResource;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 
@@ -12,12 +13,12 @@ class HotelController extends Controller
     public function index(Request $request, HotelFilter $hotelFilter)
     {
         $hotels = Hotel::filter($hotelFilter)->paginate($request->input('perPage', 20));
-        return response()->json($hotels, 200);
+        return new HotelResource($hotels);
     }
 
     public function show($id)
     {
-        return response()->json(Hotel::findOrFail($id));
+        return new HotelResource(Hotel::findOrFail($id));
     }
 
     public function store(HotelCreateRequest $request)
